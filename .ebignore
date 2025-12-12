@@ -1,0 +1,3 @@
+.ebextensions/django.config
+.ebextensions/scaling.config
+.ebextensions/https-instance.config

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}{% if action %}{{ action }}{% else %}Vlog Form{% endif %}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">{{ action }}</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
+                    
+                    {{ form|crispy }}
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">{{ button_text }}</button>
+                        <a href="{% url 'vlog-list' %}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Form Instructions -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">📝 Form Instructions</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-4">Title:</dt>
+                    <dd class="col-sm-8">A catchy title for your vlog (max 200 characters)</dd>
+                    
+                    <dt class="col-sm-4">Video URL:</dt>
+                    <dd class="col-sm-8">Link to YouTube, Vimeo, or other video platform</dd>
+                    
+                    <dt class="col-sm-4">Description:</dt>
+                    <dd class="col-sm-8">Detailed description of your vlog content (supports line breaks)</dd>
+                    
+                    <dt class="col-sm-4">Category:</dt>
+                    <dd class="col-sm-8">Select or create a category for your vlog</dd>
+                    
+                    <dt class="col-sm-4">Tags:</dt>
+                    <dd class="col-sm-8">Comma-separated tags for better searchability</dd>
+                    
+                    <dt class="col-sm-4">Thumbnail:</dt>
+                    <dd class="col-sm-8">Optional custom thumbnail image (image files only)</dd>
+                    
+                    <dt class="col-sm-4">Published Date:</dt>
+                    <dd class="col-sm-8">When this vlog should be published (date and time)</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card {
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #dee2e6;
+    }
+</style>
+{% endblock %}

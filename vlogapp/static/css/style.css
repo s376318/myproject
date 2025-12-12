@@ -1,0 +1,260 @@
+/* Main Styles for Vlog Application */
+
+:root {
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --success-color: #28a745;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #17a2b8;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f5f5f5;
+}
+
+/* Navigation */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* Cards */
+.card {
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Vlog Card */
+.vlog-card {
+    border-left: 4px solid var(--primary-color);
+}
+
+.vlog-card .card-title a {
+    color: var(--primary-color);
+    transition: color 0.2s;
+}
+
+.vlog-card .card-title a:hover {
+    color: #0056b3;
+}
+
+/* Vlog Detail */
+.vlog-detail {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.vlog-detail h1 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 15px;
+}
+
+.vlog-description {
+    line-height: 1.8;
+    color: #333;
+}
+
+/* Badges */
+.badge {
+    padding: 6px 12px;
+    font-size: 0.875rem;
+}
+
+/* Buttons */
+.btn {
+    border-radius: 5px;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+/* Pagination */
+.pagination {
+    gap: 5px;
+}
+
+.page-link {
+    border-radius: 5px;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.page-link:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.page-item.active .page-link {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Forms */
+.form-control, .form-select, .form-check-input {
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* Sidebar */
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.card-header h5 {
+    color: var(--primary-color);
+    margin-bottom: 0;
+}
+
+/* Footer */
+footer {
+    margin-top: auto;
+    border-top: 1px solid #dee2e6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .vlog-card {
+        margin-bottom: 15px;
+    }
+
+    .card-title {
+        font-size: 1.1rem;
+    }
+
+    .navbar-brand {
+        font-size: 1.3rem;
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Alert Styles */
+.alert {
+    border-radius: 5px;
+    border: none;
+}
+
+.alert-info {
+    background-color: #e7f3ff;
+    color: #004085;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+/* Search Form */
+.input-group {
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.input-group .form-control {
+    border-right: none;
+}
+
+.input-group .btn {
+    border-left: none;
+}
+
+/* Video Container */
+.ratio {
+    background-color: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* Tag Styles */
+.badge {
+    border-radius: 20px;
+    padding: 8px 14px;
+    font-weight: 500;
+}
+
+/* Links */
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* List Group */
+.list-group-item {
+    border-color: #dee2e6;
+    color: var(--secondary-color);
+    transition: all 0.2s;
+}
+
+.list-group-item:hover {
+    background-color: #f0f0f0;
+}
+
+.list-group-item.active {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}

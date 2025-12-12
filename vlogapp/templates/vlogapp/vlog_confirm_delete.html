@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Vlog - Confirmation{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">⚠️ Delete Vlog</h4>
+            </div>
+            <div class="card-body">
+                <p class="lead">Are you sure you want to delete this vlog?</p>
+                <h5 class="card-title">{{ vlog.title }}</h5>
+                <p class="text-muted">{{ vlog.description|truncatewords:20 }}</p>
+                
+                <div class="alert alert-warning" role="alert">
+                    <strong>Warning!</strong> This action cannot be undone. The vlog will be permanently deleted.
+                </div>
+
+                <form method="post" class="d-inline">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">
+                        Yes, Delete This Vlog
+                    </button>
+                </form>
+                <a href="{{ vlog.get_absolute_url }}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

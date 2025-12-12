@@ -1,0 +1,122 @@
+{% extends "admin/change_list.html" %}
+{% load admin_urls static %}
+
+{% block result_list %}
+{{ block.super }}
+
+<style>
+    /* Custom action buttons styling */
+    .submit-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        padding: 15px 0;
+        border-top: 1px solid #ddd;
+        margin-top: 20px;
+    }
+
+    .action-button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #417690;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        transition: background-color 0.2s;
+    }
+
+    .action-button:hover {
+        background-color: #205067;
+    }
+
+    .action-button.danger {
+        background-color: #dc3545;
+    }
+
+    .action-button.danger:hover {
+        background-color: #c82333;
+    }
+
+    .action-button.success {
+        background-color: #28a745;
+    }
+
+    .action-button.success:hover {
+        background-color: #218838;
+    }
+
+    .action-button.info {
+        background-color: #17a2b8;
+    }
+
+    .action-button.info:hover {
+        background-color: #138496;
+    }
+
+    /* Hide the default actions form */
+    .actions {
+        display: none;
+    }
+</style>
+
+<div class="submit-row" style="display: flex; gap: 10px; flex-wrap: wrap; padding: 15px 0; border-top: 1px solid #ddd; margin-top: 20px;">
+    <button type="button" class="action-button" 
+            onclick="return setActionAndConfirm('reset_views', 'Are you sure you want to reset views for selected vlogs?')">
+        ↻ Reset Views
+    </button>
+    
+    <button type="button" class="action-button success"
+            onclick="return setActionAndConfirm('publish_vlog', 'Are you sure you want to publish selected vlogs?')">
+        ✓ Publish Now
+    </button>
+    
+    <button type="button" class="action-button danger"
+            onclick="return setActionAndConfirm('delete_vlogs', 'Are you sure you want to DELETE selected vlogs? This cannot be undone.')">
+        🗑️ Delete Selected
+    </button>
+</div>
+
+<script>
+    function setActionAndConfirm(action, message) {
+        // Get selected checkboxes
+        var checkboxes = document.querySelectorAll('input[name="_selected_action"]:checked');
+        
+        if (checkboxes.length === 0) {
+            alert('Please select at least one vlog.');
+            return false;
+        }
+        
+        if (!confirm(message)) {
+            return false;
+        }
+        
+        // Set action value and submit the main changelist form
+        var mainForm = document.getElementById('changelist-form');
+        var actionInput = mainForm.querySelector('select[name="action"]');
+        
+        if (actionInput) {
+            actionInput.value = action;
+        } else {
+            // Create hidden input if select doesn't exist
+            var hiddenAction = document.createElement('input');
+            hiddenAction.type = 'hidden';
+            hiddenAction.name = 'action';
+            hiddenAction.value = action;
+            mainForm.appendChild(hiddenAction);
+        }
+        
+        // Trigger the main form's submit button
+        var submitButton = mainForm.querySelector('button[name="index"]');
+        if (submitButton) {
+            submitButton.click();
+        } else {
+            mainForm.submit();
+        }
+        
+        return false;
+    }
+</script>
+{% endblock %}

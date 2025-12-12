@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% load vlog_tags %}
+
+{% block title %}{{ vlog.title }} - Vlog{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Video Section -->
+        <div class="vlog-detail mb-4">
+            <h1 class="mb-3">{{ vlog.title }}</h1>
+            
+            <!-- Video Embed -->
+            <div class="ratio ratio-16x9 mb-4">
+                {% if vlog.video_url|is_youtube %}
+                    <iframe 
+                        src="{{ vlog.video_url|get_video_embed_url }}?rel=0&modestbranding=1" 
+                        title="YouTube video player" 
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allowfullscreen>
+                    </iframe>
+                {% elif vlog.video_url|is_vimeo %}
+                    <iframe 
+                        src="{{ vlog.video_url|get_video_embed_url }}" 
+                        allow="autoplay; fullscreen" 
+                        allowfullscreen>
+                    </iframe>
+                {% else %}
+                    <div class="bg-dark d-flex align-items-center justify-content-center text-white">
+                        <a href="{{ vlog.video_url }}" target="_blank" class="btn btn-primary btn-lg">
+                            🎥 Watch Video (External)
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Metadata -->
+            <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                <div>
+                    <small class="text-muted">
+                        By <strong>{{ vlog.author }}</strong> | 
+                        Published: <strong>{{ vlog.published_date|date:"M d, Y" }}</strong>
+                    </small>
+                </div>
+                <div>
+                    <span class="badge bg-info">{{ vlog.views_count }} views</span>
+                </div>
+            </div>
+
+            <!-- Category and Tags -->
+            <div class="mb-3">
+                <span class="badge bg-primary me-2">{{ vlog.category }}</span>
+                {% for tag in vlog.get_tags_list %}
+                    <span class="badge bg-secondary">{{ tag }}</span>
+                {% endfor %}
+            </div>
+
+            <!-- Description -->
+            <div class="vlog-description mb-4">
+                <h4>About this Vlog</h4>
+                <p>{{ vlog.description|linebreaks }}</p>
+            </div>
+        </div>
+
+        <!-- Related Vlogs -->
+        {% if related_vlogs %}
+            <div class="related-vlogs mt-5">
+                <h4>More from {{ vlog.category }}</h4>
+                <div class="row g-3">
+                    {% for related in related_vlogs %}
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                {% if related.thumbnail %}
+                                    <img src="{{ related.thumbnail.url }}" class="card-img-top" alt="{{ related.title }}">
+                                {% else %}
+                                    <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
+                                        <span class="text-white">🎬</span>
+                                    </div>
+                                {% endif %}
+                                <div class="card-body">
+                                    <h6 class="card-title">
+                                        <a href="{{ related.get_absolute_url }}" class="text-decoration-none">
+                                            {{ related.title|truncatewords:10 }}
+                                        </a>
+                                    </h6>
+                                    <small class="text-muted">{{ related.views_count }} views</small>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5 class="mb-0">About the Author</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>{{ vlog.author.get_full_name|default:vlog.author }}</strong></p>
+                <small class="text-muted">{{ vlog.author.email }}</small>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Vlog Info</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-5">Category:</dt>
+                    <dd class="col-sm-7">
+                        <a href="?category={{ vlog.category.slug }}">{{ vlog.category }}</a>
+                    </dd>
+                    <dt class="col-sm-5">Published:</dt>
+                    <dd class="col-sm-7">{{ vlog.published_date|date:"M d, Y" }}</dd>
+                    <dt class="col-sm-5">Views:</dt>
+                    <dd class="col-sm-7">{{ vlog.views_count }}</dd>
+                    <dt class="col-sm-5">Tags:</dt>
+                    <dd class="col-sm-7">
+                        {% for tag in vlog.get_tags_list %}
+                            <span class="badge bg-secondary">{{ tag }}</span>
+                        {% endfor %}
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Parse video ID from YouTube URL
+    function extractYouTubeID(url) {
+        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+        const match = url.match(regExp);
+        return (match && match[2].length === 11) ? match[2] : null;
+    }
+
+    // Parse video ID from Vimeo URL
+    function extractVimeoID(url) {
+        const regExp = /^.*(vimeo.com\/)(\d+).*/;
+        const match = url.match(regExp);
+        return match ? match[2] : null;
+    }
+</script>
+{% endblock %}

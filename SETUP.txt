@@ -1,0 +1,27 @@
+QUICK START GUIDE
+=================
+
+FIRST TIME SETUP
+================
+python -m venv venv
+
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+.\venv\Scripts\Activate.ps1
+
+pip install -r requirements.txt
+
+python manage.py migrate
+
+
+RUN WEBSITE
+===========
+.\venv\Scripts\Activate.ps1
+python manage.py runserver
+
+
+OPEN IN BROWSER
+===============
+Website: http://127.0.0.1:8000/
+Admin: http://127.0.0.1:8000/admin/
+Login: admin / admin123

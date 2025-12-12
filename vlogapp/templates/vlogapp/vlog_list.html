@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block title %}Vlogs - Home{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-lg-8">
+        <h1 class="mb-4">Latest Vlogs</h1>
+    </div>
+    <div class="col-lg-4">
+        <!-- Search Form -->
+        <form method="get" class="mb-3">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control" placeholder="Search vlogs..." 
+                       value="{{ search_query }}">
+                <button class="btn btn-primary" type="submit">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Main Content -->
+    <div class="col-lg-8">
+        {% if vlogs %}
+            <div class="vlog-list">
+                {% for vlog in vlogs %}
+                    <a href="{{ vlog.get_absolute_url }}" class="text-decoration-none">
+                        <div class="card mb-3 vlog-card" style="cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;" 
+                             onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 4px 15px rgba(0,0,0,0.15)';" 
+                             onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                            <div class="row g-0 h-100">
+                                <div class="col-md-4 d-flex align-items-center">
+                                    {% if vlog.thumbnail %}
+                                        <img src="{{ vlog.thumbnail.url }}" class="img-fluid rounded-start w-100" alt="{{ vlog.title }}" style="object-fit: cover; height: 200px;">
+                                    {% else %}
+                                        <div class="bg-secondary d-flex align-items-center justify-content-center w-100" style="height: 200px;">
+                                            <span class="text-white display-6">🎬</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-dark">{{ vlog.title }}</h5>
+                                        <p class="card-text text-truncate text-muted">{{ vlog.description|truncatewords:30 }}</p>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <small class="text-muted">
+                                                By <strong>{{ vlog.author }}</strong> | 
+                                                {{ vlog.published_date|date:"M d, Y" }}
+                                            </small>
+                                            <span class="badge bg-info">{{ vlog.views_count }} views</span>
+                                        </div>
+                                        <div class="mt-2">
+                                            <span class="badge bg-primary">{{ vlog.category }}</span>
+                                            {% for tag in vlog.get_tags_list|slice:":3" %}
+                                                <span class="badge bg-secondary">{{ tag }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+
+            <!-- Pagination -->
+            {% if is_paginated %}
+                <nav aria-label="Page navigation" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1{% if search_query %}&q={{ search_query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}">First</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}">Previous</a>
+                            </li>
+                        {% endif %}
+
+                        {% for num in page_obj.paginator.page_range %}
+                            {% if page_obj.number == num %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ num }}</span>
+                                </li>
+                            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}{% if search_query %}&q={{ search_query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}">Next</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&q={{ search_query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}">Last</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        {% else %}
+            <div class="alert alert-info">
+                <h4>No vlogs found</h4>
+                <p>
+                    {% if search_query %}
+                        No results for "{{ search_query }}". Try a different search term.
+                    {% elif selected_category %}
+                        No vlogs in this category yet.
+                    {% else %}
+                        No vlogs available yet. Check back later!
+                    {% endif %}
+                </p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+        <!-- Categories -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <h5 class="mb-0">Categories</h5>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="{% url 'vlog-list' %}" class="list-group-item list-group-item-action {% if not selected_category %}active{% endif %}">
+                    All Categories
+                </a>
+                {% for category in categories %}
+                    <a href="?category={{ category.slug }}" 
+                       class="list-group-item list-group-item-action {% if selected_category == category.slug %}active{% endif %}">
+                        {{ category.name }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Statistics</h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-1">
+                    <strong>Total Vlogs:</strong> {{ paginator.count }}
+                </p>
+                <p class="mb-1">
+                    <strong>Categories:</strong> {{ categories|length }}
+                </p>
+                <p class="mb-0">
+                    <strong>Page:</strong> {{ page_obj.number }}/{{ page_obj.paginator.num_pages }}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
